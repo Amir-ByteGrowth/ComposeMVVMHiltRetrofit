@@ -1,6 +1,7 @@
 package com.example.composemvvmhiltretrofit.di
 
 import com.example.composemvvmhiltretrofit.data.remote.ApiService
+import com.example.composemvvmhiltretrofit.data.remote.repository.MainRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -24,4 +25,11 @@ class NetworkModule {
     @Singleton
     @Provides
     fun providesApiService(retrofit: Retrofit) : ApiService = retrofit.create(ApiService::class.java)
+
+    @Singleton
+    @Provides
+    fun provideRepository(
+        apiService: ApiService
+    ) =
+        MainRepository(apiService)
 }

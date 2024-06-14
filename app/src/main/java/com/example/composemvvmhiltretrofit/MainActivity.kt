@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.composemvvmhiltretrofit.data.remote.ApiService
+import com.example.composemvvmhiltretrofit.ui.listscreen.ListContent
 import com.example.composemvvmhiltretrofit.ui.theme.ComposeMVVMHiltRetrofitTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.GlobalScope
@@ -38,7 +39,8 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Greeting("Android")
+//                    Greeting("Android")
+                    ListContent()
                 }
             }
         }

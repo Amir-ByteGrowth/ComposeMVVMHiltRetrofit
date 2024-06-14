@@ -39,13 +39,13 @@ fun ListItemUi(modifier: Modifier = Modifier, motivationDataItem: MotivationData
 }
 
 
-@Preview
-@Composable
-fun ListItemPRev() {
-    ListItemUi(
-        motivationDataItem = MotivationDataItem(
-            "Motivation",
-            "Motivation is used as tool to fuel up your energy. you must listent to them"
-        )
-    )
-}
+//@Preview
+//@Composable
+//fun ListItemPRev() {
+//    ListItemUi(
+//        motivationDataItem = MotivationDataItem(
+//            "Motivation",
+//            "Motivation is used as tool to fuel up your energy. you must listent to them"
+//        )
+//    )
+//}
