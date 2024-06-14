@@ -1,5 +1,6 @@
 package com.example.composemvvmhiltretrofit.ui.listscreen
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -31,15 +32,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.composemvvmhiltretrofit.data.models.MotivationDataItem
 
 @Composable
 fun ListContent(modifier: Modifier = Modifier, viewModel: ListScreenViewModel = hiltViewModel()) {
 
     val uiState = viewModel.uiState.collectAsState()
 
-    Content(uiState = uiState.value) {
+    Content(uiState = uiState.value, searchData = {
         viewModel.searchData(it)
-    }
+    }, onFavClick = {
+        Log.d("DataItemInserted",it.toString())
+        viewModel.insertData(it)
+    })
 }
 
 
@@ -47,7 +52,8 @@ fun ListContent(modifier: Modifier = Modifier, viewModel: ListScreenViewModel = 
 fun Content(
     modifier: Modifier = Modifier,
     uiState: ListScreenUiState = ListScreenUiState.Loading,
-    searchData: (searchData: String) -> Unit
+    searchData: (searchData: String) -> Unit,
+    onFavClick: (motivationDataItem:MotivationDataItem) -> Unit
 ) {
     var searchText by remember { mutableStateOf("") }
     var lazyScrollState = rememberLazyListState()
@@ -106,7 +112,9 @@ fun Content(
                 is ListScreenUiState.Success -> {
                     LazyColumn(state = lazyScrollState) {
                         items(uiState.list) { item ->
-                            ListItemUi(motivationDataItem = item)
+                            ListItemUi(motivationDataItem = item) {
+                                onFavClick.invoke(item)
+                            }
                         }
                     }
                 }

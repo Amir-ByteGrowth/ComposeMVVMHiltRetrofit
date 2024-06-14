@@ -4,9 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.composemvvmhiltretrofit.MyApplication
 import com.example.composemvvmhiltretrofit.R
+import com.example.composemvvmhiltretrofit.data.models.MotivationDataEntity
 import com.example.composemvvmhiltretrofit.data.models.MotivationDataItem
-import com.example.composemvvmhiltretrofit.data.remote.repository.MainRepository
-import com.example.composemvvmhiltretrofit.utils.extractErrorMessage
+import com.example.composemvvmhiltretrofit.data.repository.MainRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -67,18 +67,37 @@ class ListScreenViewModel @Inject constructor(private val mainRepository: MainRe
         viewModelScope.launch {
             delay(3000)
             val searchedData=_listToKeepInViewModel.filter { it.category.contains(searchStr,true) }
-            if (searchedData.isNotEmpty()){
-                _uiState.value=ListScreenUiState.Success(searchedData)
-            }else{
+            if (searchedData.isNotEmpty()) {
+                _uiState.value = ListScreenUiState.Success(searchedData)
+            } else {
                 _uiState.value = ListScreenUiState.Error("No Item found with this name")
             }
 
         }
 
 
-
     }
 
+
+    fun getFavList(motivationDataItem: MotivationDataItem) {
+        val list = mainRepository.getAllMotivation()
+        if (list.isEmpty()) {
+            _uiState.value = ListScreenUiState.Error("No Fav Item found ")
+        } else {
+            _uiState.value = ListScreenUiState.Success(list)
+        }
+    }
+
+    fun insertData(motivationDataItem: MotivationDataItem) {
+        viewModelScope.launch {
+            mainRepository.insertMotivation(
+                MotivationDataEntity(
+                    category = motivationDataItem.category,
+                    text = motivationDataItem.text
+                )
+            )
+        }
+    }
 
 
 }
