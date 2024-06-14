@@ -8,6 +8,7 @@ import com.example.composemvvmhiltretrofit.data.models.MotivationDataEntity
 import com.example.composemvvmhiltretrofit.data.models.MotivationDataItem
 import com.example.composemvvmhiltretrofit.data.repository.MainRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -79,13 +80,18 @@ class ListScreenViewModel @Inject constructor(private val mainRepository: MainRe
     }
 
 
-    fun getFavList(motivationDataItem: MotivationDataItem) {
-        val list = mainRepository.getAllMotivation()
-        if (list.isEmpty()) {
-            _uiState.value = ListScreenUiState.Error("No Fav Item found ")
-        } else {
-            _uiState.value = ListScreenUiState.Success(list)
+    fun getFavList() {
+        _uiState.value = ListScreenUiState.Loading
+        viewModelScope.launch(Dispatchers.IO) {
+            delay(2000)
+            val list = mainRepository.getAllMotivation()
+            if (list.isEmpty()) {
+                _uiState.value = ListScreenUiState.Error("No Fav Item found ")
+            } else {
+                _uiState.value = ListScreenUiState.Success(list)
+            }
         }
+
     }
 
     fun insertData(motivationDataItem: MotivationDataItem) {

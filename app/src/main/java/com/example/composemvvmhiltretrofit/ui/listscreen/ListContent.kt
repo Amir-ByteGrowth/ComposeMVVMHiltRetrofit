@@ -15,6 +15,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
@@ -44,7 +45,7 @@ fun ListContent(modifier: Modifier = Modifier, viewModel: ListScreenViewModel = 
     }, onFavClick = {
         Log.d("DataItemInserted",it.toString())
         viewModel.insertData(it)
-    })
+    }, viewModel = viewModel)
 }
 
 
@@ -53,7 +54,7 @@ fun Content(
     modifier: Modifier = Modifier,
     uiState: ListScreenUiState = ListScreenUiState.Loading,
     searchData: (searchData: String) -> Unit,
-    onFavClick: (motivationDataItem:MotivationDataItem) -> Unit
+    onFavClick: (motivationDataItem:MotivationDataItem) -> Unit,viewModel: ListScreenViewModel
 ) {
     var searchText by remember { mutableStateOf("") }
     var lazyScrollState = rememberLazyListState()
@@ -87,6 +88,13 @@ fun Content(
                 }
             }) {
                 Icon(imageVector = Icons.Default.Search, contentDescription = "Search")
+            }
+
+
+            IconButton(onClick = {
+                viewModel.getFavList()
+            }) {
+                Icon(imageVector = Icons.Default.FavoriteBorder, contentDescription = "Fav")
             }
         }
     }
@@ -140,7 +148,7 @@ fun SearchBar(
     Column {
         Row(
             modifier = Modifier
-                .fillMaxWidth(0.85f)
+                .fillMaxWidth(0.78f)
                 .padding(8.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
