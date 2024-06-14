@@ -3,6 +3,7 @@ package com.example.composemvvmhiltretrofit.ui.listscreen
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -50,6 +51,7 @@ fun Content(
 ) {
     var searchText by remember { mutableStateOf("") }
     var lazyScrollState = rememberLazyListState()
+    var showError by remember { mutableStateOf(false) }
     Scaffold(bottomBar = {
         Row(
             modifier = modifier
@@ -64,11 +66,20 @@ fun Content(
 //                    .fillMaxWidth(0.85f)
 //                    .padding(10.dp)
 //            )
-            SearchBar(searchText, onSearchTextChanged = { searchText = it }, {
+            SearchBar(searchText, onSearchTextChanged = {
+                searchText = it
+                showError = false
+            }, {
                 searchText = ""
                 searchData.invoke("")
-            })
-            IconButton(onClick = { searchData.invoke(searchText) }) {
+            }, showError)
+            IconButton(onClick = {
+                if (searchText.isBlank()) {
+                    showError = true
+                } else {
+                    searchData.invoke(searchText)
+                }
+            }) {
                 Icon(imageVector = Icons.Default.Search, contentDescription = "Search")
             }
         }
@@ -115,41 +126,57 @@ fun Content(
 fun SearchBar(
     searchText: String,
     onSearchTextChanged: (String) -> Unit,
-    onClearClick: () -> Unit
+    onClearClick: () -> Unit,
+    showError: Boolean
 ) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth(0.85f)
-            .padding(8.dp),
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        BasicTextField(
-            value = searchText,
-            onValueChange = onSearchTextChanged,
+    Column {
+        Row(
             modifier = Modifier
-                .weight(1f)
-                .padding(end = 8.dp),
-            decorationBox = { innerTextField ->
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp)
-                        .background(Color.LightGray)
-                        .padding(8.dp)
-                ) {
-                    innerTextField()
-                    if (searchText.isEmpty()) {
-                        Text(text = "Search...", color = Color.Gray, modifier = Modifier.fillMaxWidth())
+                .fillMaxWidth(0.85f)
+                .padding(8.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            BasicTextField(
+                value = searchText,
+                onValueChange = onSearchTextChanged,
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(end = 8.dp),
+                decorationBox = { innerTextField ->
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp)
+                            .background(Color.LightGray)
+                            .padding(8.dp)
+                    ) {
+                        innerTextField()
+                        if (searchText.isEmpty()) {
+                            Text(
+                                text = "Search...",
+                                color = Color.Gray,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        }
                     }
                 }
-            }
-        )
+            )
 
-        if (searchText.isNotEmpty()) {
-            IconButton(onClick = onClearClick) {
-                Icon(Icons.Default.Close, contentDescription = "Clear search")
+            if (searchText.isNotEmpty()) {
+                IconButton(onClick = onClearClick) {
+                    Icon(Icons.Default.Close, contentDescription = "Clear search")
+                }
             }
         }
+
+        if (showError) {
+            Text(
+                text = "Search query cannot be empty",
+                color = Color.Red,
+                modifier = Modifier.padding(start = 8.dp, top = 4.dp)
+            )
+        }
     }
+
 }
 
