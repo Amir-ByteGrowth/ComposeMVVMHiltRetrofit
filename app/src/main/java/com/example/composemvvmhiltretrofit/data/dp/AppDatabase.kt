@@ -6,9 +6,14 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.amiritdev.kotlinbasewithcorutine.constants.AppConstants
 import com.example.composemvvmhiltretrofit.data.models.MotivationDataEntity
+import com.example.composemvvmhiltretrofit.data.models.Suggestion
 
 
-@Database(entities = [MotivationDataEntity::class], version = 1, exportSchema = false)
+@Database(
+    entities = [MotivationDataEntity::class, Suggestion::class],
+    version = 2,
+    exportSchema = false
+)
 abstract class AppDatabase : RoomDatabase(){
 
     abstract fun appDao(): AppDao
