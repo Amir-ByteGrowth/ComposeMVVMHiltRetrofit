@@ -1,17 +1,29 @@
 package com.example.composemvvmhiltretrofit.ui.listscreen
 
+import android.util.Log
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.composemvvmhiltretrofit.MyApplication
 import com.example.composemvvmhiltretrofit.R
 import com.example.composemvvmhiltretrofit.data.models.MotivationDataEntity
 import com.example.composemvvmhiltretrofit.data.models.MotivationDataItem
+import com.example.composemvvmhiltretrofit.data.models.Suggestion
 import com.example.composemvvmhiltretrofit.data.repository.MainRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -105,6 +117,56 @@ class ListScreenViewModel @Inject constructor(private val mainRepository: MainRe
         }
     }
 
+
+
+//    / Hoisted state
+    var inputMessage by mutableStateOf("")
+        private set
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val suggestions: StateFlow<List<Suggestion>> =
+        snapshotFlow { inputMessage }
+            .filter {
+                Log.d("FilterMEthod", hasSocialHandleHint(it).toString())
+                hasSocialHandleHint(it)
+            }
+            .mapLatest {
+                Log.d("MaplatestCalling", getHandle(it))
+                getHandle(it)
+
+            }
+            .mapLatest {
+                Log.d("GettingSuggestionRespository", mainRepository.getSuggestions(it).toString())
+                mainRepository.getSuggestions(it)
+
+            }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5_000),
+                initialValue = emptyList()
+            )
+
+    fun updateInput(newInput: String) {
+        inputMessage = newInput
+    }
+
+
+
+
+
+
+    // Hypothetical getHandle function
+    fun getHandle(input: String): String {
+        val regex = Regex("@([A-Za-z0-9_]+)")
+        val match = regex.find(input)
+        return match?.groupValues?.get(1) ?: ""
+    }
+
+    // hasSocialHandleHint function
+    fun hasSocialHandleHint(input: String): Boolean {
+        val regex = Regex("@[A-Za-z0-9_]+")
+        return regex.containsMatchIn(input)
+    }
 
 }
 

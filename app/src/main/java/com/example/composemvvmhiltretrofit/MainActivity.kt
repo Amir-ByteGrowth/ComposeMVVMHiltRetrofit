@@ -29,9 +29,9 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        GlobalScope.launch {
-           Log.d("response",apiService.getMotivationList().body().toString())
-        }
+//        GlobalScope.launch {
+//           Log.d("response",apiService.getMotivationList().body().toString())
+//        }
 
         setContent {
             ComposeMVVMHiltRetrofitTheme {
@@ -41,8 +41,8 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
 //                    Greeting("Android")
-//                    ListContent()
-                    SuggestionsScreen()
+                    ListContent()
+//                    SuggestionsScreen()
                 }
             }
         }

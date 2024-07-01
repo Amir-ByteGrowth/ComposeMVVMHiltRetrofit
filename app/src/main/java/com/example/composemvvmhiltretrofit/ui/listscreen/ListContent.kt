@@ -1,6 +1,7 @@
 package com.example.composemvvmhiltretrofit.ui.listscreen
 
 import android.util.Log
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.BasicTextField
@@ -34,15 +36,22 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.composemvvmhiltretrofit.data.models.MotivationDataItem
+import com.example.composemvvmhiltretrofit.data.models.Suggestion
 
 @Composable
 fun ListContent(modifier: Modifier = Modifier, viewModel: ListScreenViewModel = hiltViewModel()) {
 
     val uiState = viewModel.uiState.collectAsState()
-
+    val suggestions = viewModel.suggestions.collectAsState()
+Log.d("SuugestionList",suggestions.value.size.toString())
     Content(uiState = uiState.value, searchData = {
         viewModel.searchData(it)
-    }, onFavClick = {
+    },
+        suggestionsList = suggestions.value,
+        findSuggestions = { viewModel.updateInput(it)
+            Log.d("UpdateInputIsCallind",it)
+                          },
+        onFavClick = {
         Log.d("DataItemInserted",it.toString())
         viewModel.insertData(it)
     }, viewModel = viewModel)
@@ -53,19 +62,25 @@ fun ListContent(modifier: Modifier = Modifier, viewModel: ListScreenViewModel = 
 fun Content(
     modifier: Modifier = Modifier,
     uiState: ListScreenUiState = ListScreenUiState.Loading,
+    suggestionsList: List<Suggestion>,
+    findSuggestions: (String) -> Unit,
     searchData: (searchData: String) -> Unit,
-    onFavClick: (motivationDataItem:MotivationDataItem) -> Unit,viewModel: ListScreenViewModel
+    onFavClick: (motivationDataItem: MotivationDataItem) -> Unit, viewModel: ListScreenViewModel,
 ) {
     var searchText by remember { mutableStateOf("") }
     var lazyScrollState = rememberLazyListState()
     var showError by remember { mutableStateOf(false) }
     Scaffold(bottomBar = {
-        Row(
-            modifier = modifier
-                .fillMaxWidth()
 
-                .background(color = Color.LightGray), verticalAlignment = Alignment.CenterVertically
-        ) {
+        Column {
+            SuggestionsContent(suggestionsList)
+            Row(
+                modifier = modifier
+                    .fillMaxWidth()
+
+                    .background(color = Color.LightGray),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
 //            OutlinedTextField(
 //                value = searchText,
 //                onValueChange = { searchText = it },
@@ -73,30 +88,33 @@ fun Content(
 //                    .fillMaxWidth(0.85f)
 //                    .padding(10.dp)
 //            )
-            SearchBar(searchText, onSearchTextChanged = {
-                searchText = it
-                showError = false
-            }, {
-                searchText = ""
-                searchData.invoke("")
-            }, showError)
-            IconButton(onClick = {
-                if (searchText.isBlank()) {
-                    showError = true
-                } else {
-                    searchData.invoke(searchText)
+                SearchBar(searchText, onSearchTextChanged = {
+                    findSuggestions(it)
+                    searchText = it
+                    showError = false
+                }, {
+                    searchText = ""
+                    searchData.invoke("")
+                }, showError)
+                IconButton(onClick = {
+                    if (searchText.isBlank()) {
+                        showError = true
+                    } else {
+                        searchData.invoke(searchText)
+                    }
+                }) {
+                    Icon(imageVector = Icons.Default.Search, contentDescription = "Search")
                 }
-            }) {
-                Icon(imageVector = Icons.Default.Search, contentDescription = "Search")
-            }
 
 
-            IconButton(onClick = {
-                viewModel.getFavList()
-            }) {
-                Icon(imageVector = Icons.Default.FavoriteBorder, contentDescription = "Fav")
+                IconButton(onClick = {
+                    viewModel.getFavList()
+                }) {
+                    Icon(imageVector = Icons.Default.FavoriteBorder, contentDescription = "Fav")
+                }
             }
         }
+
     }
 
     ) {
@@ -132,6 +150,18 @@ fun Content(
                 }
 
 
+            }
+        }
+    }
+}
+
+
+@Composable
+fun SuggestionsContent(suggestionsList: List<Suggestion> = emptyList()) {
+    AnimatedVisibility(visible = suggestionsList.isNotEmpty()) {
+        LazyRow {
+            items(suggestionsList) { item ->
+                Text(text = item.handle, modifier = Modifier.padding(horizontal = 5.dp, vertical = 10.dp).background(color = Color.Cyan))
             }
         }
     }

@@ -31,7 +31,7 @@ interface AppDao {
     @Query("SELECT * FROM suggestions where handle LIKE '%' || :search || '%'")
     suspend fun getSuggestions(search:String): List<Suggestion>
 
-    @Query("SELECT * FROM suggestions order by id des")
+    @Query("SELECT * FROM suggestions order by id desc")
      fun getSuggestionsList(): Flow<List<Suggestion>>
 
 }
