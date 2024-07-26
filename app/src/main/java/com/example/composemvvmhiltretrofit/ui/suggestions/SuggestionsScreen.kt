@@ -24,10 +24,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.composemvvmhiltretrofit.data.models.Suggestion
+import com.example.composemvvmhiltretrofit.navigations.DashboardNavigation
+import com.example.composemvvmhiltretrofit.ui.listscreen.SharedViewModel
 
 
 @Composable
-fun SuggestionsScreen(suggestionsViewModel: SuggestionsViewModel = hiltViewModel()) {
+fun SuggestionsScreen(
+    sharedViewModel: SharedViewModel,
+    suggestionsViewModel: SuggestionsViewModel = hiltViewModel(),
+    navigate: (DashboardNavigation) -> Unit,
+) {
+
     val suggestionsListState = suggestionsViewModel.uiState.collectAsState()
     Column {
         TopBarContent {

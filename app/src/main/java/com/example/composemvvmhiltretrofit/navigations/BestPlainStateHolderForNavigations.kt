@@ -5,9 +5,17 @@ import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
+import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavDestination
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
+import com.example.composemvvmhiltretrofit.ui.listscreen.SharedViewModel
+import com.example.composemvvmhiltretrofit.ui.suggestions.SuggestionsScreen
+import com.example.composemvvmhiltretrofit.ui.suggestions.SuggestionsViewModel
 
 @Stable
 class NiaAppState(
@@ -38,4 +46,37 @@ class NiaAppState(
     sealed interface NiaNavigationDestination {
 
     }
+}
+
+
+@Composable
+fun MainNavigation(modifier: Modifier = Modifier) {
+    val navController = rememberNavController()
+
+    val sharedViewModel : SharedViewModel = hiltViewModel()
+
+    NavHost(navController = navController, startDestination = "Home") {
+        composable("Home"){
+//            val suggestionsViewModel : SuggestionsViewModel = hiltViewModel()
+            SuggestionsScreen(sharedViewModel){navigationType ->
+                when(navigationType){
+                    DashboardNavigation.NavigateToCarList -> {
+                        navController.navigate("detail",)
+                    }
+                    DashboardNavigation.NavigateToSetting -> TODO()
+                    DashboardNavigation.NavigateToCarDetail -> TODO()
+                }
+            }
+        }
+
+        composable("Detail"){
+
+        }
+    }
+}
+
+enum class DashboardNavigation{
+    NavigateToCarList,
+    NavigateToSetting,
+    NavigateToCarDetail
 }
