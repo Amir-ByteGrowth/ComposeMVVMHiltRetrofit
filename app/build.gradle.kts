@@ -86,4 +86,8 @@ dependencies {
     kapt ("androidx.room:room-compiler:2.5.1")
     implementation ("androidx.room:room-ktx:2.5.1")
 
+    //Chucker for debuging api
+    debugImplementation( "com.github.chuckerteam.chucker:library:4.0.0")
+    releaseImplementation( "com.github.chuckerteam.chucker:library-no-op:4.0.0")
+
 }
