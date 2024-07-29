@@ -1,10 +1,18 @@
 package com.example.composemvvmhiltretrofit.data.remote
 
+import com.example.composemvvmhiltretrofit.data.models.MotivationDataItem
 
 
+sealed interface ListScreenUiState {
+    object Initial : ListScreenUiState
+    object Loading : ListScreenUiState
+    data class Success(var list: List<MotivationDataItem>) : ListScreenUiState
+    data class Error(var error: String) : ListScreenUiState
+
+}
 
 sealed class Resource<out T> {
-
+    class Initial<T> : Resource<T>()
     class Loading<T> : Resource<T>()
     data class Success<T>(val data: T) : Resource<T>()
     data class Error<T>(val status: Status, val data: T?, val message: String?,val responseError: ResponseError?) : Resource<T>()
@@ -17,6 +25,8 @@ sealed class Resource<out T> {
 
 
     companion object {
+
+        fun <T> initial() = Initial<T> ()
 
         /**
          * Returns [State.Loading] instance.

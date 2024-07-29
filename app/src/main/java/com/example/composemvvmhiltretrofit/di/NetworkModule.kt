@@ -4,10 +4,11 @@ import android.content.Context
 import com.chuckerteam.chucker.api.ChuckerCollector
 import com.chuckerteam.chucker.api.ChuckerInterceptor
 import com.example.composemvvmhiltretrofit.MyApplication
-import com.example.composemvvmhiltretrofit.data.dp.AppDao
-import com.example.composemvvmhiltretrofit.data.dp.AppDatabase
+import com.example.composemvvmhiltretrofit.data.local.database.AppDao
+import com.example.composemvvmhiltretrofit.data.local.database.AppDatabase
+import com.example.composemvvmhiltretrofit.data.local.datastore.DataStoreProvider
 import com.example.composemvvmhiltretrofit.data.remote.ApiService
-import com.example.composemvvmhiltretrofit.data.repository.MainRepository
+import com.example.composemvvmhiltretrofit.repository.MainRepository
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -19,13 +20,8 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.security.KeyStore
-import java.security.cert.CertificateFactory
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
-import javax.net.ssl.SSLContext
-import javax.net.ssl.TrustManagerFactory
-import javax.net.ssl.X509TrustManager
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -86,9 +82,9 @@ class NetworkModule {
     @Provides
     fun provideRepository(
         apiService: ApiService,
-        localDataSource: AppDao
+        localDataSource: AppDao,dataStoreProvider: DataStoreProvider
     ) =
-        MainRepository(apiService, localDataSource = localDataSource)
+        MainRepository(apiService, localDataSource = localDataSource, dataStoreProvider = dataStoreProvider)
 
     @Singleton
     @Provides
@@ -98,5 +94,9 @@ class NetworkModule {
     @Provides
     fun provideDao(db: AppDatabase) = db.appDao()
 
+
+    @Singleton
+    @Provides
+    fun providesDataStore(@ApplicationContext appContext: Context) = DataStoreProvider(appContext)
 
 }

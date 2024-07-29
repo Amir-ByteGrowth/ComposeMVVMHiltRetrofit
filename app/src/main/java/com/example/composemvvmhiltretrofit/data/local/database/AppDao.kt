@@ -1,4 +1,4 @@
-package com.example.composemvvmhiltretrofit.data.dp
+package com.example.composemvvmhiltretrofit.data.local.database
 
 import androidx.room.Dao
 import androidx.room.Insert

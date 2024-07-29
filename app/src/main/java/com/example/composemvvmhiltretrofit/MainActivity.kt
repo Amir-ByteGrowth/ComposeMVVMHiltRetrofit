@@ -15,6 +15,7 @@ import com.example.composemvvmhiltretrofit.data.remote.ApiService
 import com.example.composemvvmhiltretrofit.ui.listscreen.ListContent
 import com.example.composemvvmhiltretrofit.ui.suggestions.SuggestionsScreen
 import com.example.composemvvmhiltretrofit.ui.theme.ComposeMVVMHiltRetrofitTheme
+import com.example.composemvvmhiltretrofit.ui.userlistscreen.UserListScreen
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -41,8 +42,9 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
 //                    Greeting("Android")
-                    ListContent()
+//                    ListContent()
 //                    SuggestionsScreen()
+                    UserListScreen()
                 }
             }
         }

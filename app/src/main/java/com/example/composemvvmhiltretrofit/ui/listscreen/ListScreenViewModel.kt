@@ -12,7 +12,7 @@ import com.example.composemvvmhiltretrofit.R
 import com.example.composemvvmhiltretrofit.data.models.MotivationDataEntity
 import com.example.composemvvmhiltretrofit.data.models.MotivationDataItem
 import com.example.composemvvmhiltretrofit.data.models.Suggestion
-import com.example.composemvvmhiltretrofit.data.repository.MainRepository
+import com.example.composemvvmhiltretrofit.repository.MainRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi

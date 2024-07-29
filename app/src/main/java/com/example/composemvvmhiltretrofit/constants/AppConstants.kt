@@ -1,5 +1,6 @@
 package com.amiritdev.kotlinbasewithcorutine.constants
 
+import androidx.annotation.IntDef
 import androidx.annotation.LongDef
 import androidx.annotation.StringDef
 
@@ -31,16 +32,51 @@ object AppConstants {
     }
 
 
-    @StringDef(DataStore.DATA_STORE_NAME, DataStore.LOCALIZATION_KEY_NAME, DataStore.USER_NAME_KEY)
+    @StringDef(
+        DataStore.DATA_STORE_NAME,
+        DataStore.LOCALIZATION_KEY_NAME,
+        DataStore.USER_NAME_KEY,
+        DataStore.FIRST_TIME_LOGIN,
+        DataStore.SHOW_INTRO_SCREEN,
+        DataStore.API_TOKEN,
+        DataStore.SHOW_INTRO_SCREEN_ENCRYPTED,
+        DataStore.PASSCODE,
+        DataStore.BIOMETRIC_LOGIN,
+        DataStore.FIRST_TIME_LOGIN,
+        DataStore.AVATAR,
+        DataStore.USER_AVATAR,
+        DataStore.USER_NAME,
+        DataStore.USER_OBJECT,
+        DataStore.APP_THEME,
+    )
     annotation class DataStore {
         companion object {
-            const val DATA_STORE_NAME = "BaseProject"
-            const val LOCALIZATION_KEY_NAME = "lang"
+            const val DATA_STORE_NAME = "BMWCarServices"
+            const val LOCALIZATION_KEY_NAME = "app_language"
             const val USER_NAME_KEY = "user_name_key"
+            const val FIRST_TIME_LOGIN = "isFirstTimeLoggingInUsingThisDevice"
+            const val SHOW_INTRO_SCREEN = "isShowIntroScreen"
+            const val API_TOKEN = "apiToken"
+            const val USER_AVATAR = "userAvatar"
+            const val USER_NAME = "userName"
+            const val PASSCODE = "passcode"
+            const val USER_OBJECT = "userObject"
+            const val BIOMETRIC_LOGIN = "biometricLogin"
+            const val AVATAR = "Avatar"
+            const val SHOW_INTRO_SCREEN_ENCRYPTED = "isShowIntroScreenEncrypted"
+            const val APP_THEME = "AppTheme"
         }
     }
 
-
+    @IntDef(
+        WithdrawAddressFieldViewType.TEXT, WithdrawAddressFieldViewType.DROP_DOWN
+    )
+    annotation class WithdrawAddressFieldViewType {
+        companion object {
+            const val TEXT = 2
+            const val DROP_DOWN = 1
+        }
+    }
 
 
 }

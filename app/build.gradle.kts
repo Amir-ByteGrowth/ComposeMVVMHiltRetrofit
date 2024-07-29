@@ -90,4 +90,10 @@ dependencies {
     debugImplementation( "com.github.chuckerteam.chucker:library:4.0.0")
     releaseImplementation( "com.github.chuckerteam.chucker:library-no-op:4.0.0")
 
+    // Preferences DataStore
+    implementation ("androidx.datastore:datastore-preferences:1.1.1")
+
+    // Proto DataStore
+    implementation ("androidx.datastore:datastore-core:1.1.1")
+
 }
