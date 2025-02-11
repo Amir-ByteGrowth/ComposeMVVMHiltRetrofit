@@ -65,7 +65,7 @@ class MainRepository @Inject constructor(
     }
 
 
-    suspend fun <T> handleApiResponse(apiCall: suspend () -> Response<T>): Resource<T> {
+    private suspend fun <T> handleApiResponse(apiCall: suspend () -> Response<T>): Resource<T> {
         return try {
             val c = apiCall()
             c.let {
